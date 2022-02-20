@@ -66,11 +66,14 @@ def createPost(posterID, postID, title, description, posterRoles, lookingforRole
     conn.commit()
     return postID.lastrowid
 
+
 def getPostByUserID(userID):
     return c.execute("SELECT * FROM postTable WHERE posterID='?'", (userID,)).fetchone()
 
+
 def getRelpiesByPost(replyingToID):
-    return c.execute("SELECT * FROM postTable WHERE postID='?'", (replyingToID,)).fetchone()
+    return c.execute("SELECT * FROM postTable WHERE replyingToID='?'", (replyingToID,)).fetchone()
+
 
 def getAllPosts():
     return c.execute("SELECT * FROM postTable").fetchall()
