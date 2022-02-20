@@ -1,12 +1,24 @@
 import sqlite3 as sql3
 
 
+def rowDict(cursor, row):
+    rowSql = sql3.Row(cursor, row)
+    return dict(zip(rowSql.keys(), row))
+
+
 def openDB(filename):
-    conn = sql3.connect(filename)
-    c = conn.cursor()
-    if ("SELECT name FROM sqlite_master WHERE type='table' AND name='users'" == 0):
-        createUsersTable()
-    c.close()
+    global conn
+    conn = sql3.connect(filename, check_same_thread=False)
+    conn.row_factory = rowDict
+    try:
+        recreateUsersTable()
+    except:
+        print("Error creating user table")
+
+    try:
+        recreatePostTable()
+    except:
+        print("Error creating post table")
 
 
 def closeDB():
@@ -22,7 +34,10 @@ def createUser(first, last, email, password) -> int:
     return userID.lastrowid
 
 
-def createUsersTable():
+userProperties = ["first", "last", "email", "password"]
+
+
+def recreateUsersTable():
     c = conn.cursor()
     c.execute("""CREATE TABLE userTable (
                 first text,
@@ -34,7 +49,11 @@ def createUsersTable():
     c.close()
 
 
-def createPostTable():
+postProperties = ["posterID", "postID", "title", "description",
+                  "posterRoles", "lookingforRoles", "replyingToID", "timestamp"]
+
+
+def recreatePostTable():
     c = conn.cursor()
     c.execute("""CREATE TABLE postTable (
                  posterID integer,
@@ -62,31 +81,29 @@ def getUser(email):
 
 def getUserByID(userID):
     c = conn.cursor()
-    user = c.execute("SELECT * FROM userTable WHERE userID='?'", (userID,)).fetchone()
+    user = c.execute("SELECT * FROM userTable WHERE email= ? ",
+                     (email,)).fetchone()
     c.close()
     return user
 
 def getUsersByFirst(first):
     c = conn.cursor()
-    user = c.execute("SELECT * FROM userTable WHERE first='?'", (first,)).fetchall()
-    c.close()
-    return user
-def getUsersByLast(last):
-    c = conn.cursor()
-    user = c.execute("SELECT * FROM userTable WHERE last='?'", (last,)).fetchall()
+    user = c.execute("SELECT * FROM userTable WHERE userID= ? ",
+                     [userID]).fetchone()
     c.close()
     return user
 
 def getPost(postID):
     c = conn.cursor()
-    post = c.execute("SELECT * FROM postTable WHERE postID='?'", (postID,)).fetchone()
+    post = c.execute("SELECT * FROM postTable WHERE postID= ?",
+                     [postID]).fetchone()
     c.close()
     return post
 
 
 def createPost(posterID, postID, title, description, posterRoles, lookingforRoles, replyingToID) -> int:
     c = conn.cursor()
-    postID = c.execute("INSERT INTO postTable(posterID, title, description, posterRoles, lookingforRoles, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
+    postID = c.execute("INSERT INTO postTable(posterID, title, description, posterRoles, lookingforRoles, replyingToID, timestamp) VALUES (?, ?, ?, ?, ?, ?, DEFAULT)",
                        (posterID, title, description, posterRoles, lookingforRoles, replyingToID))
     conn.commit()
     c.close()
@@ -94,13 +111,22 @@ def createPost(posterID, postID, title, description, posterRoles, lookingforRole
 
 def getPostsByUserID(userID):
     c = conn.cursor()
-    post_by_user_id = c.execute("SELECT * FROM postTable WHERE posterID='?'", (userID,)).fetchall()
+    post_by_user_id = c.execute(
+        "SELECT * FROM postTable WHERE posterID= ? ", (userID,)).fetchall()
     c.close()
     return post_by_user_id
 
 def getRepliesByPost(replyingToID):
     c = conn.cursor()
-    replies = c.execute("SELECT * FROM postTable WHERE postID='?'", (replyingToID,)).fetchall()
+    replies = c.execute(
+        "SELECT * FROM postTable WHERE postID= ? ", (replyingToID,)).fetchall()
+    c.close()
+    return replies
+
+def getUniqueRoles():
+    c = conn.cursor()
+    replies = c.execute(
+        "SELECT DISTINCT posterRoles FROM postTable").fetchall()
     c.close()
     return replies
 

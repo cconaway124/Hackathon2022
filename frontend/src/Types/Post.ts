@@ -1,17 +1,25 @@
 export type Role = string
 
 export interface User {
-	userId: number,
+	userID: number,
 	name: string
 	email: `${string}@${string}.${string}`
 	roles: string[]
 }
 
 export interface Post {
-	poster: User["userId"]
+	postID: number,
+
+	replyingToID: number,
+
+	poster: User["userID"]
 
 	posterTag: Role
 	lookingForTag: Role
 
 	description: string
+}
+
+export type PostWithUser = Omit<Post, "poster"> & {
+	poster: User
 }
