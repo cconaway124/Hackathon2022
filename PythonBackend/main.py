@@ -47,6 +47,21 @@ def getPost(postID):
     return db.getPost(postID)
 
 
+@app.get("/allReplies/<postID>")
+def getRelpiesByPost(postID):
+    return db.getRelpiesByPost(postID)
+
+
+@app.get("/allPosts/<userID>")
+def getPostsByUserID(userID):
+    return db.getPostsByUserID(userID)
+
+
+@app.get("/allPosts")
+def getAllPosts():
+    return db.getAllPosts()
+
+
 if __name__ == "__main__":
     from waitress import serve
     db.openDB("looking4.db")
