@@ -4,6 +4,7 @@ from flask_cors import CORS  # This is the magic
 
 app = Flask(__name__)
 CORS(app)
+app['CORS_HEADERS'] = 'Content-Type'
 
 
 def createUsersTable():
@@ -18,6 +19,11 @@ def createPostTable():
         db.createPostTable()
     except:
         print("Error creating post database")
+
+
+@app.get("/roles")
+def getRoles():
+    return db.getUniqueRoles()
 
 
 @app.get("/ping")

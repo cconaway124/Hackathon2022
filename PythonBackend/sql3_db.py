@@ -127,6 +127,13 @@ def getRepliesByPost(replyingToID):
     c.close()
     return replies
 
+def getUniqueRoles():
+    c = conn.cursor()
+    replies = c.execute(
+        "SELECT DISTINCT posterRoles FROM postTable").fetchall()
+    c.close()
+    return replies
+
 
 def getAllPosts():
     c = conn.cursor()

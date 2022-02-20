@@ -1,5 +1,6 @@
+import { ChangeEvent, useCallback, useState } from "react";
 import { TestPoster } from "../Constants";
-import { Status, useGetAllPosts, useGetAllUsers, useGetPostsByUserID } from "../Hooks/databaseRequests";
+import { Status, useAPIRequest, useGetAllPosts, useGetAllUsers, useGetPostsByUserID } from "../Hooks/databaseRequests";
 import { Post, PostWithUser, User } from "../Types/Post";
 import { DisplayPost } from "./Post";
 
@@ -14,39 +15,30 @@ type Displayers<T> = {
 }
 
 export function Feed({ user }: { user: User }) {
-	const users = useGetAllUsers()
-	console.log(users.value)
+	const roles = useAPIRequest<string[]>("/roles")
 
+	const [filterRole, setFilterRole] = useState<string | null>(null)
+
+	const filter = useCallback(({ target }: ChangeEvent<Element>) => {
+		const tany = target as any
+		console.log(tany.value)
+		console.log(tany.option)
+		setFilterRole(target.nodeValue)
+	}, [])
 
 	const requestForPosts = useGetAllPosts()
 
-	// for (const post of posts) {
-	// 	for (const key in post) {
-	// 		const keyAsKey = key as keyof Post
-	// 		if (uniques[keyAsKey] == undefined) {
-	// 			uniques[keyAsKey] = new Set<Post[typeof keyAsKey]>() as any
-	// 		}
-	// 		uniques[keyAsKey]?.add(post[keyAsKey] as any)
-	// 	}
-	// }
-	// console.log(uniques, displayer)
+	console.log(requestForPosts)
 
 	return (
 		<div className="w-2/3 ml-auto mr-auto">
-			{/* <div className="flex place-content-center ">
+			<div className="flex place-content-center ">
 				{
-					Object.entries(uniques).map(([key, value]) => {
-						const disp = displayer[key as keyof Post]
-						console.log(key, value)
-						const arr = Array.of(value)
-						console.log(arr)
-						return (<select key={key}>
-							{[...value].map(opt => (
-								<option key={opt.toString()}>{disp(opt as any)}</option>
-							))}
-						</select>)
-					})}
-			</div> */}
+					<select onChange={filter}>
+						{roles.value?.map(x => <option value={x}>{x}</option>)}
+					</select>
+				}
+			</div>
 			{(requestForPosts.isLoading) ?
 				<span>Loading...</span>
 				: (requestForPosts.value?.map((post, i) => (
