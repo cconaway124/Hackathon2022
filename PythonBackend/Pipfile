@@ -1,5 +1,0 @@
-[requires]
-python_version = '>3.0'
-
-[packages]
-flask = ">2.0.0"
