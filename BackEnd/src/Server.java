@@ -7,10 +7,11 @@ import org.json.*;
 public class Server {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        server.createContext("/posts", new GetHandler()); //getHttpContext
-        //server.createContext("/user", new UserHandler())
+        server.createContext("/posts", new PostsHandler()); //getHttpContext
+        server.createContext("/user", new GetHandler())
         server.setExecutor(null); // creates a default executor
         server.start();
+        System.out.println("Started")
     }
 
     static class PostsHandler implements HttpHandler {
@@ -18,6 +19,7 @@ public class Server {
         public void handle(HttpExchange t) throws IOException {
             String requestParamVal = null;
             if ("POST".equalsIgnoreCase(t.getRequestMethod())) {
+                System.out.println("In post")
                 requestParamVal = handlePostRequest(t);
             } else {
                 requestParamVal = "Not a post";
@@ -48,6 +50,7 @@ public class Server {
         public void handle(HttpExchange t) throws IOException {
             String requestParamVal = null;
             if ("GET".equalsIgnoreCase(t.getRequestMethod())) {
+                System.out.println("In Get")
                 requestParamVal = handleGetRequest(t);
                 handleResponse(t, requestParamVal);
             } else {
@@ -65,6 +68,7 @@ public class Server {
                 String[] string = firstSplit[i].split("=");
                 request.put(string[0], string[1]);
             }
+            System.out.println(request.toString())
             return request.toString();
         }
 
