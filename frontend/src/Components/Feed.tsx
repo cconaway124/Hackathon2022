@@ -1,5 +1,6 @@
 import { TestPoster } from "../Constants";
-import { Post, User } from "../Types/Post";
+import { Status, useGetAllPosts, useGetAllUsers, useGetPostsByUserID } from "../Hooks/databaseRequests";
+import { Post, PostWithUser, User } from "../Types/Post";
 import { DisplayPost } from "./Post";
 
 type Filter<T> = Partial<{
@@ -13,50 +14,26 @@ type Displayers<T> = {
 }
 
 export function Feed({ user }: { user: User }) {
-	const posts: Post[] = []
-	for (let i = 0; i < 10; i++) {
-		posts.push({
-			poster: TestPoster,
-			posterTag: "PosterTag1",
-			lookingForTag: "LookingForTag1",
-			description: "Description"
-		})
-		posts.push({
-			poster: TestPoster,
-			posterTag: "PosterTag2",
-			lookingForTag: "LookingForTag2",
-			description: "Description"
-		})
-	}
+	const users = useGetAllUsers()
+	console.log(users.value)
 
-	const filters: Filter<Post> = {
 
-	}
-	const uniques: UniqueValues<Post> = {
+	const requestForPosts = useGetAllPosts()
 
-	}
-
-	const displayer: Displayers<Post> = {
-		poster: (p) => p.name,
-		posterTag: (p) => p,
-		lookingForTag: (p) => p,
-		description: (p) => p,
-	}
-
-	for (const post of posts) {
-		for (const key in post) {
-			const keyAsKey = key as keyof Post
-			if (uniques[keyAsKey] == undefined) {
-				uniques[keyAsKey] = new Set<Post[typeof keyAsKey]>() as any
-			}
-			uniques[keyAsKey]?.add(post[keyAsKey] as any)
-		}
-	}
-	console.log(uniques, displayer)
+	// for (const post of posts) {
+	// 	for (const key in post) {
+	// 		const keyAsKey = key as keyof Post
+	// 		if (uniques[keyAsKey] == undefined) {
+	// 			uniques[keyAsKey] = new Set<Post[typeof keyAsKey]>() as any
+	// 		}
+	// 		uniques[keyAsKey]?.add(post[keyAsKey] as any)
+	// 	}
+	// }
+	// console.log(uniques, displayer)
 
 	return (
 		<div className="w-2/3 ml-auto mr-auto">
-			<div className="flex place-content-center ">
+			{/* <div className="flex place-content-center ">
 				{
 					Object.entries(uniques).map(([key, value]) => {
 						const disp = displayer[key as keyof Post]
@@ -69,12 +46,12 @@ export function Feed({ user }: { user: User }) {
 							))}
 						</select>)
 					})}
-			</div>
-			{posts.map((post, i) => (
+			</div> */}
+			{(requestForPosts.status === Status.Success) ? (requestForPosts.value?.map((post, i) => (
 				<div key={i} className="shadow-md rounded-md">
-					<DisplayPost post={post} />
+					<DisplayPost post={post as unknown as PostWithUser} />
 				</div>
-			))}
+			))) : ((requestForPosts.status === Status.Fail) ? "Error" : "Loading...")}
 		</div>
 	);
 }

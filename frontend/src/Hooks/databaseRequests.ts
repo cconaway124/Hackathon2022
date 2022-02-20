@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { APIUrl } from "../Constants";
 import { Post, User } from "../Types/Post";
 
-const enum Status {
+export const enum Status {
 	NotSent,
 	Loading,
 	Success,
@@ -47,24 +47,28 @@ export function useGetPostById(postId: number) {
 	return useAPIRequest(`/post/${postId}`);
 }
 export function useCreatePost(post: Post) {
-	return useAPIRequest(`/post`, { method: "POST", body: post });
+	return useAPIRequest<Post["postID"]>(`/post`, { method: "POST", body: post });
 }
 
 export function useCreateUser(user: User) {
-	return useAPIRequest('/user', { method: "POST", body: user })
+	return useAPIRequest<User["userID"]>('/user', { method: "POST", body: user })
 }
-export function useGetUserByUId(userId: number) {
-	return useAPIRequest(`/user/${userId}`)
+export function useGetUserByUId(userID: number) {
+	return useAPIRequest<User>(`/user/${userID}`)
 }
 
 export function useGetRepliesByPost(postID: number) {
-	return useAPIRequest(`/allReplies/${postID}`)
+	return useAPIRequest<Post[]>(`/allReplies/${postID}`)
 }
 
 export function useGetPostsByUserID(userID: number) {
-	return useAPIRequest(`/allPosts/${userID}`)
+	return useAPIRequest<Post[]>(`/allPosts/${userID}`)
 }
 
 export function useGetAllPosts() {
-	return useAPIRequest(`/allPosts`)
+	return useAPIRequest<Post[]>(`/allPosts`)
+}
+
+export function useGetAllUsers() {
+	return useAPIRequest<User[]>(`/users`)
 }
