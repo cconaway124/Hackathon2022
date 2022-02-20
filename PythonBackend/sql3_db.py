@@ -1,9 +1,15 @@
 import sqlite3 as sql3
 
 
+def rowDict(cursor, row):
+    rowSql = sql3.Row(cursor, row)
+    return dict(zip(rowSql.keys(), row))
+
+
 def openDB(filename):
     global conn
     conn = sql3.connect(filename, check_same_thread=False)
+    conn.row_factory = rowDict
     try:
         recreateUsersTable()
     except:
@@ -28,6 +34,9 @@ def createUser(first, last, email, password) -> int:
     return userID.lastrowid
 
 
+userProperties = ["first", "last", "email", "password"]
+
+
 def recreateUsersTable():
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS userTable (
@@ -38,6 +47,10 @@ def recreateUsersTable():
     userID integer primary key
 )""")
     c.close()
+
+
+postProperties = ["posterID", "postID", "title", "description",
+                  "posterRoles", "lookingforRoles", "replyingToID", "timestamp"]
 
 
 def recreatePostTable():
@@ -92,7 +105,7 @@ def getPost(postID):
 
 def createPost(posterID, postID, title, description, posterRoles, lookingforRoles, replyingToID) -> int:
     c = conn.cursor()
-    postID = c.execute("INSERT INTO postTable(posterID, title, description, posterRoles, lookingforRoles, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
+    postID = c.execute("INSERT INTO postTable(posterID, title, description, posterRoles, lookingforRoles, replyingToID, timestamp) VALUES (?, ?, ?, ?, ?, ?, DEFAULT)",
                        (posterID, title, description, posterRoles, lookingforRoles, replyingToID))
     conn.commit()
     c.close()
