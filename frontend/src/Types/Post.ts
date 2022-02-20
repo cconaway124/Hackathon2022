@@ -1,13 +1,14 @@
 export type Role = string
 
 export interface User {
+	userId: number,
 	name: string
 	email: `${string}@${string}.${string}`
-	roles: Role[]
+	roles: string[]
 }
 
 export interface Post {
-	poster: User
+	poster: User["userId"]
 
 	posterTag: Role
 	lookingForTag: Role

@@ -48,8 +48,8 @@ def getPost(postID):
 
 
 @app.get("/allReplies/<postID>")
-def getRelpiesByPost(postID):
-    return db.getRelpiesByPost(postID)
+def getRepliesByPost(postID):
+    return db.getRepliesByPost(postID)
 
 
 @app.get("/allPosts/<userID>")
