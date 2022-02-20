@@ -1,6 +1,5 @@
-from PythonBackend.sql3_db import closeDB
 import sql3_db as db
-from flask import request, jsonify, Flask
+from flask import request, Flask
 
 app = Flask(__name__)
 
