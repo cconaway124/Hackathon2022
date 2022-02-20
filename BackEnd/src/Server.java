@@ -8,7 +8,7 @@ public class Server {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/posts", new PostsHandler()); //getHttpContext
-        server.createContext("/user", new GetHandler())
+        server.createContext("/user", new GetHandler());
         server.setExecutor(null); // creates a default executor
         server.start();
         System.out.println("Started");
