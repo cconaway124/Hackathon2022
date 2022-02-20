@@ -56,7 +56,7 @@ export function Feed({ user }: { user: User }) {
 
 	return (
 		<div className="w-2/3 ml-auto mr-auto">
-			<form>
+			<div className="flex place-content-center ">
 				{
 					Object.entries(uniques).map(([key, value]) => {
 						const disp = displayer[key as keyof Post]
@@ -69,7 +69,7 @@ export function Feed({ user }: { user: User }) {
 							))}
 						</select>)
 					})}
-			</form>
+			</div>
 			{posts.map((post, i) => (
 				<div key={i} className="shadow-md rounded-md">
 					<DisplayPost post={post} />
