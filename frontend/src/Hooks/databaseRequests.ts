@@ -33,8 +33,9 @@ export function useRequest<T>(url: string, init?: ModifiedInit) {
 	useEffect(() => {
 		setStatus(Status.Loading)
 	}, [])
+
 	return {
-		value, status, error
+		value, status, error, isLoading: status === Status.Loading
 	}
 }
 

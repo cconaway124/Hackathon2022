@@ -1,7 +1,9 @@
 import sql3_db as db
 from flask import request, Flask, jsonify
+from flask_cors import CORS  # This is the magic
 
 app = Flask(__name__)
+CORS(app)
 
 
 def createUsersTable():

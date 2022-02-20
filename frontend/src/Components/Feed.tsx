@@ -47,11 +47,13 @@ export function Feed({ user }: { user: User }) {
 						</select>)
 					})}
 			</div> */}
-			{(requestForPosts.status === Status.Success) ? (requestForPosts.value?.map((post, i) => (
-				<div key={i} className="shadow-md rounded-md">
-					<DisplayPost post={post as unknown as PostWithUser} />
-				</div>
-			))) : ((requestForPosts.status === Status.Fail) ? "Error" : "Loading...")}
+			{(requestForPosts.isLoading) ?
+				<span>Loading...</span>
+				: (requestForPosts.value?.map((post, i) => (
+					<div key={i} className="shadow-md rounded-md">
+						<DisplayPost post={post as unknown as PostWithUser} />
+					</div>
+				)))}
 		</div>
 	);
 }
