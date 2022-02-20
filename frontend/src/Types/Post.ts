@@ -8,11 +8,10 @@ export interface User {
 }
 
 export interface Post {
+	poster: User
 	postID: number,
 
 	replyingToID: number,
-
-	poster: User["userID"]
 
 	posterTag: Role
 	lookingForTag: Role

@@ -7,7 +7,7 @@ function App() {
   return (
     <main>
       <Header />
-      <div className="flex justify-center w-full bg-cover bg-fixed bg-[url('https://alumni.wsu.edu/s/1613/images/gid2/editor/zoom_backgrounds/165440_general_zoom_background_3_p1.jpg')]">
+      <div className="flex justify-center w-full h-full bg-cover bg-fixed bg-[url('https://alumni.wsu.edu/s/1613/images/gid2/editor/zoom_backgrounds/165440_general_zoom_background_3_p1.jpg')]">
         <Feed user={TestPoster} />
       </div>
     </main>

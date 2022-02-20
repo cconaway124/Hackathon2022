@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useCallback, useState } from "react";
 import { TestPoster } from "../Constants";
 import { Status, useAPIRequest, useGetAllPosts, useGetAllUsers, useGetPostsByUserID } from "../Hooks/databaseRequests";
 import { Post, PostWithUser, User } from "../Types/Post";
@@ -15,9 +15,66 @@ type Displayers<T> = {
 }
 
 export function Feed({ user }: { user: User }) {
-	const roles = useAPIRequest<string[]>("/roles")
+	const [posts, setPosts] =
+		useState<Post[]>([{
+			poster: { userId: 4, name: "Hunter McClure", email: "hunter.mcclure@wsu.edu", roles: [] },
+			posterTag: "Driver",
+			lookingForTag: "Passengers",
+			description: "On my way to Spokane! Any takers?"
+		}, {
+			poster: { userId: 4, name: "Chase Conaway", email: "chase.conaway@wsu.edu", roles: [] },
+			posterTag: "CS Tutor",
+			lookingForTag: "Students",
+			description: "I've taken 121, 122, and 123, as well as a bunch of math!"
+		}, {
+			poster: { userId: 4, name: "Aden Slade", email: "aden.slade@wsu.edu", roles: [] },
+			posterTag: "CS122 Textbook",
+			lookingForTag: "Buyer",
+			description: "$35"
+		}, {
+			poster: { userId: 4, name: "Marcel Mukundi", email: "marcel.mukundi@wsu.edu", roles: [] },
+			posterTag: "Party-goer",
+			lookingForTag: "Ride home",
+			description: "Partied to hard at the Coug, need a ride home"
+		},
 
-	const [filterRole, setFilterRole] = useState<string | null>(null)
+
+		{
+			poster: { userId: 4, name: "Alex O'Conner", email: "hunter.mcclure@wsu.edu", roles: [] },
+			posterTag: "Driver",
+			lookingForTag: "Passengers",
+			description: "On my way to the west side"
+		}, {
+			poster: { userId: 4, name: "Roger Robbin", email: "aden.slade@wsu.edu", roles: [] },
+			posterTag: "Eng402 Textbook",
+			lookingForTag: "Buyer",
+			description: "$15"
+		},
+		{
+			poster: { userId: 4, name: "Hannah Trenner", email: "chase.conaway@wsu.edu", roles: [] },
+			posterTag: "GenEd Tutor",
+			lookingForTag: "Students",
+			description: "Physics, algebra, english, etc. $10/hr"
+		}, {
+			poster: { userId: 4, name: "Martin John", email: "marcel.mukundi@wsu.edu", roles: [] },
+			posterTag: "Party-goer",
+			lookingForTag: "Ride home",
+			description: "Partied to hard at the Coug, need a ride home"
+		}])
+
+	function setter(oldSetter: Function): FormEventHandler {
+		return function ({ target }) {
+			oldSetter((target as any).value)
+		}
+	}
+
+	const [name, setName] = useState<string>("")
+	const [pr, setPostRole] = useState<string>("")
+	const [lr, setLookingRole] = useState<string>("")
+	const [desc, setDescription] = useState<string>("")
+
+	const filters: Filter<Post> = {
+  }
 
 	const filter = useCallback(({ target }: ChangeEvent<Element>) => {
 		const tany = target as any
@@ -30,22 +87,46 @@ export function Feed({ user }: { user: User }) {
 
 	console.log(requestForPosts)
 
+	function add() {
+		console.log("hi")
+		posts.push({
+			poster: { userId: 4, name, email: "marcel.mukundi@wsu.edu", roles: [] },
+			posterTag: pr,
+			lookingForTag: lr,
+			description: desc
+		})
+		console.log(name, pr, lr, desc)
+		setPosts([...posts])
+	}
+
 	return (
 		<div className="w-2/3 ml-auto mr-auto">
 			<div className="flex place-content-center ">
 				{
-					<select onChange={filter}>
-						{roles.value?.map(x => <option value={x}>{x}</option>)}
-					</select>
-				}
+					Object.entries(uniques).map(([key, value]) => {
+						const disp = displayer[key as keyof Post]
+						console.log(key, value)
+						const arr = Array.of(value)
+						console.log(arr)
+						return (<select className="bg-gray-400" key={key}>
+							{[...value].map(opt => (
+								<option key={JSON.stringify(opt)}>{disp(opt as any)}</option>
+							))}
+						</select>)
+					})}
+				<button className="bg-red-800 mt-2 p-3 rounded-lg text-white" onClick={add}>Add Post + </button>
 			</div>
-			{(requestForPosts.isLoading) ?
-				<span>Loading...</span>
-				: (requestForPosts.value?.map((post, i) => (
-					<div key={i} className="shadow-md rounded-md">
-						<DisplayPost post={post as unknown as PostWithUser} />
-					</div>
-				)))}
+			<div className="bg-red-800 p-3 m-3 text-white rounded-md">
+				Name: <input className="text-black m-2" onInput={setter(setName)} /><br />
+				<input className="text-black m-2" onInput={setter(setPostRole)} />
+				looking for <input className="text-black m-2" onInput={setter(setLookingRole)} /><br />
+				Description: <input className="text-black m-2" onInput={setter(setDescription)} />
+			</div>
+			{posts.map((post, i) => (
+				<div key={i} className="shadow-md rounded-md">
+					<DisplayPost post={post} key={JSON.stringify(post.poster)} />
+				</div>
+			))}
 		</div>
 	);
 }

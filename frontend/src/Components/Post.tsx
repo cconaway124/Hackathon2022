@@ -9,16 +9,16 @@ export interface PostProps {
 export function DisplayUser({ user }: { user: User }) {
 	return (
 		<div>
-			<span>{user.name}</span>
+			<span className="font-bold">{user.name}</span>
 		</div>
 	);
 }
 
 export function DisplayPost({ post }: PostProps) {
 	return (
-		<div className="w-full p-3 m-3 bg-gradient-to-r from-gray-500 to-gray-500 hover:from-gray-500 hover:via-gray-500 hover:to-red-800 rounded">
+		<div className="w-full p-5 m-3 bg-gradient-to-r from-gray-400 to-gray-400 hover:from-gray-400 hover:via-gray-400 hover:to-red-800 rounded">
 			<DisplayUser user={post.poster} />
-			{post.posterTag} looking for {post.lookingForTag}<br></br>
+			<span className="bg-red-800 mt-2 p-1 rounded-lg text-white">{post.posterTag}</span> looking for <span className="bg-red-800 mt-2 p-1 rounded-lg text-white">{post.lookingForTag}</span><br></br>
 			{post.description}
 		</div>
 	);
