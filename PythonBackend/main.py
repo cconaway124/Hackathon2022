@@ -18,6 +18,11 @@ def createPostTable():
         print("Error creating post database")
 
 
+@app.get("/ping")
+def ping():
+    pass
+
+
 @app.post("/user")
 def createUser():
     user = request.get_json()
