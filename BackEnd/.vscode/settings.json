@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Admin\\Downloads\\commons-text-1.9-bin\\commons-text-1.9\\commons-text-1.9.jar",
+        "c:\\Users\\Admin\\Downloads\\json-20211205.jar"
+    ]
+}
