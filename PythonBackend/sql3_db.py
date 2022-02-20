@@ -37,8 +37,8 @@ def createPostTable():
                  postID integer primary key,
                  title text,
                  description text,
-                 postertag text,
-                 lookingfortag text,
+                 posterRoles text,
+                 lookingforRoles text,
                  replyingToID integer,
                  timestamp integer,
                  foreign key (replyingToID) references postTable(postID),
@@ -60,8 +60,17 @@ def getPost(postID):
     return c.execute("SELECT * FROM postTable WHERE postID='?'", (postID,)).fetchone()
 
 
-def createPost(posterID, postID, title, description, postertag, lookingfortag, replyingToID) -> int:
-    postID = c.execute("INSERT INTO postTable(posterID, title, description, postertag, lookingfortag, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
-                       (posterID, title, description, postertag, lookingfortag, replyingToID))
+def createPost(posterID, postID, title, description, posterRoles, lookingforRoles, replyingToID) -> int:
+    postID = c.execute("INSERT INTO postTable(posterID, title, description, posterRoles, lookingforRoles, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
+                       (posterID, title, description, posterRoles, lookingforRoles, replyingToID))
     conn.commit()
     return postID.lastrowid
+
+def getPostByUserID(userID):
+    return c.execute("SELECT * FROM postTable WHERE posterID='?'", (userID,)).fetchone()
+
+def getRelpiesByPost(replyingToID):
+    return c.execute("SELECT * FROM postTable WHERE postID='?'", (replyingToID,)).fetchone()
+
+def getAllPosts():
+    return c.execute("SELECT * FROM postTable").fetchall()
