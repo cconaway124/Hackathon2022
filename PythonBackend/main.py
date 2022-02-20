@@ -1,5 +1,5 @@
 import sql3_db as db
-from flask import request, Flask
+from flask import request, Flask, jsonify
 
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ def createPostTable():
 
 @app.get("/ping")
 def ping():
-    pass
+    return "Successful ping!"
 
 
 @app.post("/user")
@@ -28,7 +28,14 @@ def createUser():
     user = request.get_json()
     userID = db.createUser(user["first"], user["last"],
                            user["email"], user["password"])
-    return userID
+    return {
+        "userID": userID
+    }
+
+
+@app.get("/users")
+def getUsersByID():
+    return jsonify(db.getUsers())
 
 
 @app.get("/user/<userID>")
@@ -39,7 +46,11 @@ def getUserByID(userID):
 @app.post("/post")
 def createPost():
     post = request.get_json()
-    return db.createPost(post["posterID"], post["postID"], post["title"], post["description"], post["postertag"], post["lookingfortag"])
+    createdPost = db.createPost(post["posterID"], post["postID"], post["title"],
+                                post["description"], post["postertag"], post["lookingfortag"])
+    return {
+        "postID": createdPost
+    }
 
 
 @app.get("/post/<postID>")
@@ -65,7 +76,5 @@ def getAllPosts():
 if __name__ == "__main__":
     from waitress import serve
     db.openDB("looking4.db")
-    createUsersTable()
-    createPostTable()
     serve(app, host="0.0.0.0", port=8080)
     db.closeDB()
