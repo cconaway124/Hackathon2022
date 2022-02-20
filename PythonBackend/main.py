@@ -18,6 +18,11 @@ def createPostTable():
         print("Error creating post database")
 
 
+@app.get("/ping")
+def ping():
+    pass
+
+
 @app.post("/user")
 def createUser():
     user = request.get_json()
@@ -40,6 +45,21 @@ def createPost():
 @app.get("/post/<postID>")
 def getPost(postID):
     return db.getPost(postID)
+
+
+@app.get("/allReplies/<postID>")
+def getRelpiesByPost(postID):
+    return db.getRelpiesByPost(postID)
+
+
+@app.get("/allPosts/<userID>")
+def getPostsByUserID(userID):
+    return db.getPostsByUserID(userID)
+
+
+@app.get("/allPosts")
+def getAllPosts():
+    return db.getAllPosts()
 
 
 if __name__ == "__main__":
