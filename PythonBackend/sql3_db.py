@@ -68,7 +68,7 @@ def getUsers():
 
 def getUser(email):
     c = conn.cursor()
-    user = c.execute("SELECT * FROM userTable WHERE email='?'",
+    user = c.execute("SELECT * FROM userTable WHERE email= ? ",
                      (email,)).fetchone()
     c.close()
     return user
@@ -76,16 +76,16 @@ def getUser(email):
 
 def getUserByID(userID):
     c = conn.cursor()
-    user = c.execute("SELECT * FROM userTable WHERE userID='?'",
-                     (userID,)).fetchone()
+    user = c.execute("SELECT * FROM userTable WHERE userID= ? ",
+                     [userID]).fetchone()
     c.close()
     return user
 
 
 def getPost(postID):
     c = conn.cursor()
-    post = c.execute("SELECT * FROM postTable WHERE postID='?'",
-                     (postID,)).fetchone()
+    post = c.execute("SELECT * FROM postTable WHERE postID= ?",
+                     [postID]).fetchone()
     c.close()
     return post
 
@@ -102,7 +102,7 @@ def createPost(posterID, postID, title, description, posterRoles, lookingforRole
 def getPostsByUserID(userID):
     c = conn.cursor()
     post_by_user_id = c.execute(
-        "SELECT * FROM postTable WHERE posterID='?'", (userID,)).fetchall()
+        "SELECT * FROM postTable WHERE posterID= ? ", (userID,)).fetchall()
     c.close()
     return post_by_user_id
 
@@ -110,7 +110,7 @@ def getPostsByUserID(userID):
 def getRepliesByPost(replyingToID):
     c = conn.cursor()
     replies = c.execute(
-        "SELECT * FROM postTable WHERE postID='?'", (replyingToID,)).fetchall()
+        "SELECT * FROM postTable WHERE postID= ? ", (replyingToID,)).fetchall()
     c.close()
     return replies
 
