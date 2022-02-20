@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { TestPoster } from "../Constants";
 import { Post, User } from "../Types/Post";
 import { DisplayPost } from "./Post";
@@ -61,6 +61,16 @@ export function Feed({ user }: { user: User }) {
 			description: "Partied to hard at the Coug, need a ride home"
 		}])
 
+	function setter(oldSetter: Function): FormEventHandler {
+		return function ({ target }) {
+			oldSetter((target as any).value)
+		}
+	}
+
+	const [name, setName] = useState<string>("")
+	const [pr, setPostRole] = useState<string>("")
+	const [lr, setLookingRole] = useState<string>("")
+	const [desc, setDescription] = useState<string>("")
 
 	const filters: Filter<Post> = {
 
@@ -90,11 +100,12 @@ export function Feed({ user }: { user: User }) {
 	function add() {
 		console.log("hi")
 		posts.push({
-			poster: { userId: 4, name: "Default", email: "marcel.mukundi@wsu.edu", roles: [] },
-			posterTag: "Test",
-			lookingForTag: "Test",
-			description: "Test"
+			poster: { userId: 4, name, email: "marcel.mukundi@wsu.edu", roles: [] },
+			posterTag: pr,
+			lookingForTag: lr,
+			description: desc
 		})
+		console.log(name, pr, lr, desc)
 		setPosts([...posts])
 	}
 
@@ -114,6 +125,12 @@ export function Feed({ user }: { user: User }) {
 						</select>)
 					})}
 				<button className="bg-red-800 mt-2 p-3 rounded-lg text-white" onClick={add}>Add Post + </button>
+			</div>
+			<div className="bg-red-800 p-3 m-3 text-white rounded-md">
+				Name: <input className="text-black m-2" onInput={setter(setName)} /><br />
+				<input className="text-black m-2" onInput={setter(setPostRole)} />
+				looking for <input className="text-black m-2" onInput={setter(setLookingRole)} /><br />
+				Description: <input className="text-black m-2" onInput={setter(setDescription)} />
 			</div>
 			{posts.map((post, i) => (
 				<div key={i} className="shadow-md rounded-md">
