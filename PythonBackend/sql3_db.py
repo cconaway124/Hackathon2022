@@ -35,6 +35,7 @@ def createPostTable():
                  postertag text,
                  lookingfortag text,
                  replyingToID integer,
+                 timestamp integer,
                  foreign key (replyingToID) references postTable(postID),
                  foreign key (posterID) references userTable(userID)
                  )""" )
@@ -49,8 +50,8 @@ def getUserByID(userID):
 def getPost(postID):
     return c.execute("SELECT * FROM postTable WHERE postID='?'", (postID,))
 
-def createPost(posterID, postID, title, description, postertag, lookingfortag):
-    postID = c.execute("INSERT INTO postTable(posterID, title, description, postertag, lookingfortag, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
-                (posterID, title, description, postertag, lookingfortag, replyingToID))
+def createPost(posterID, postID, title, description, postertag, lookingfortag, timestamp):
+    postID = c.execute("INSERT INTO postTable(posterID, title, description, postertag, lookingfortag, replyingToID, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (posterID, title, description, postertag, lookingfortag, replyingToID, timestamp))
     conn.commit()
     return postID
