@@ -8,7 +8,7 @@ export interface User {
 }
 
 export interface Post {
-	poster: User["userId"]
+	poster: User
 
 	posterTag: Role
 	lookingForTag: Role

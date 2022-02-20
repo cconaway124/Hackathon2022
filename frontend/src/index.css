@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 select {
-    background-color: gray;
     padding: 5px;
     border-radius: 5px;
     margin-left: 5px;
