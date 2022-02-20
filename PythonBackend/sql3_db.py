@@ -1,5 +1,6 @@
 import sqlite3 as sql3
 
+
 def openDB(filename):
     global conn
     global c
@@ -12,19 +13,23 @@ def openDB(filename):
 def closeDB():
     conn.close()
 
-def createUser(first, last, email, password):
-    userID = c.execute("INSERT INTO userTable(first, last, email, password) VALUES (?, ?, ?, ?)", (first, last, email, password))
+
+def createUser(first, last, email, password) -> int:
+    userID = c.execute(
+        "INSERT INTO userTable(first, last, email, password) VALUES (?, ?, ?, ?)", (first, last, email, password))
     conn.commit()
-    return userID
+    return userID.lastrowid
+
 
 def createUsersTable():
     c.execute("""CREATE TABLE userTable (
                 first text,
                 last text,
-                email text,
+                email text unique,
                 password text,
                 userID integer primary key
                 )""")
+
 
 def createPostTable():
     c.execute("""CREATE TABLE postTable (
@@ -38,20 +43,25 @@ def createPostTable():
                  timestamp integer,
                  foreign key (replyingToID) references postTable(postID),
                  foreign key (posterID) references userTable(userID)
-                 )""" )
+                 )""")
 
 #c.execute("INSERT INTO users VALUES ('Chase', 'Conaway', 'chase.conaway@wsu.edu', '1234')")
+
+
 def getUser(email):
-    return c.execute("SELECT * FROM userTable WHERE email='?'", (email,))
+    return c.execute("SELECT * FROM userTable WHERE email='?'", (email,)).fetchone()
+
 
 def getUserByID(userID):
-    return c.execute("SELECT * FROM userTable WHERE userID='?'", (userID,))
+    return c.execute("SELECT * FROM userTable WHERE userID='?'", (userID,)).fetchone()
+
 
 def getPost(postID):
-    return c.execute("SELECT * FROM postTable WHERE postID='?'", (postID,))
+    return c.execute("SELECT * FROM postTable WHERE postID='?'", (postID,)).fetchone()
 
-def createPost(posterID, postID, title, description, postertag, lookingfortag, timestamp):
-    postID = c.execute("INSERT INTO postTable(posterID, title, description, postertag, lookingfortag, replyingToID, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (posterID, title, description, postertag, lookingfortag, replyingToID, timestamp))
+
+def createPost(posterID, postID, title, description, postertag, lookingfortag, replyingToID) -> int:
+    postID = c.execute("INSERT INTO postTable(posterID, title, description, postertag, lookingfortag, replyingToID) VALUES (?, ?, ?, ?, ?, ?)",
+                       (posterID, title, description, postertag, lookingfortag, replyingToID))
     conn.commit()
-    return postID
+    return postID.lastrowid
