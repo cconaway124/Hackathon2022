@@ -60,17 +60,17 @@ def getPost(postID):
 
 @app.get("/allReplies/<postID>")
 def getRepliesByPost(postID):
-    return db.getRepliesByPost(postID)
+    return jsonify(db.getRepliesByPost(postID))
 
 
 @app.get("/allPosts/<userID>")
 def getPostsByUserID(userID):
-    return db.getPostsByUserID(userID)
+    return jsonify(db.getPostsByUserID(userID))
 
 
 @app.get("/allPosts")
 def getAllPosts():
-    return db.getAllPosts()
+    return jsonify(db.getAllPosts())
 
 
 if __name__ == "__main__":
