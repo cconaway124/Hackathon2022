@@ -1,9 +1,9 @@
 import React from "react";
 import { TestPoster } from "../Constants";
-import { Post, User } from "../Types/Post";
+import { Post, PostWithUser, User } from "../Types/Post";
 
 export interface PostProps {
-	post: Post
+	post: PostWithUser
 }
 
 export function DisplayUser({ user }: { user: User }) {

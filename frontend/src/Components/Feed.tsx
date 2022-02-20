@@ -1,6 +1,7 @@
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useCallback, useState } from "react";
 import { TestPoster } from "../Constants";
-import { Post, User } from "../Types/Post";
+import { Status, useAPIRequest, useGetAllPosts, useGetAllUsers, useGetPostsByUserID } from "../Hooks/databaseRequests";
+import { Post, PostWithUser, User } from "../Types/Post";
 import { DisplayPost } from "./Post";
 
 type Filter<T> = Partial<{
@@ -73,29 +74,18 @@ export function Feed({ user }: { user: User }) {
 	const [desc, setDescription] = useState<string>("")
 
 	const filters: Filter<Post> = {
+  }
 
-	}
-	const uniques: UniqueValues<Post> = {
+	const filter = useCallback(({ target }: ChangeEvent<Element>) => {
+		const tany = target as any
+		console.log(tany.value)
+		console.log(tany.option)
+		setFilterRole(target.nodeValue)
+	}, [])
 
-	}
+	const requestForPosts = useGetAllPosts()
 
-	const displayer: Displayers<Post> = {
-		poster: (p) => p.name,
-		posterTag: (p) => p,
-		lookingForTag: (p) => p,
-		description: (p) => p,
-	}
-
-	for (const post of posts) {
-		for (const key in post) {
-			const keyAsKey = key as keyof Post
-			if (uniques[keyAsKey] == undefined) {
-				uniques[keyAsKey] = new Set<Post[typeof keyAsKey]>() as any
-			}
-			uniques[keyAsKey]?.add(post[keyAsKey] as any)
-		}
-	}
-	console.log(uniques, displayer)
+	console.log(requestForPosts)
 
 	function add() {
 		console.log("hi")
